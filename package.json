@@ -1,6 +1,6 @@
 {
   "name": "@lemonbot.fun/illuminate",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "scripts": {
     "dev": "tsc-watch",
     "build": "node build/clean.js && npm run build:lib && npm run build:types",
@@ -17,7 +17,10 @@
   "main": "lib/index.js",
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "dependencies": {
     "dayjs": "^1.8.26",
     "enquire.js": "^2.1.6",
