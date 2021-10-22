@@ -115,7 +115,7 @@ async function getReleaseVersion() {
     console.info(':: =--= Publishing :: =--=');
     await copy(path.resolve(__dirname, '../package.json'), distDir);
     process.chdir(distDir);
-    await exec(`${npmCmd} publish --registry https://verdaccio.newlinks.com/`);
+    await exec(`${npmCmd} publish --access public`);
 
     spinner.stop();
 
