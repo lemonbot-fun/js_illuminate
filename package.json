@@ -1,0 +1,82 @@
+{
+  "name": "@lemonbot.fun/illuminate",
+  "version": "0.1.1",
+  "scripts": {
+    "dev": "tsc-watch",
+    "build": "node build/clean.js && npm run build:lib && npm run build:types",
+    "build:lib": "babel ./src --config-file ./babel.config.js --out-dir ./dist --extensions \".ts,.tsx\"",
+    "build:types": "tsc --emitDeclarationOnly",
+    "lint": "eslint \"src/**/*.ts\"",
+    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "lint:style": "node build/stylelint.js",
+    "test": "jest",
+    "test:update-snapshot": "jest --update-snapshot",
+    "test:coverage": "jest --collect-coverage",
+    "pub": "npm run lint && npm run lint:style && node build/publish.js"
+  },
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": ["dist", "src"],
+  "dependencies": {
+    "dayjs": "^1.8.26",
+    "enquire.js": "^2.1.6",
+    "lodash": "^4.17.15",
+    "mitt": "^2.1.0",
+    "ts-jest": "^26.5.6"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/plugin-transform-typescript": "^7.15.8",
+    "@babel/preset-typescript": "^7.15.0",
+    "@types/enquire.js": "^2.1.2",
+    "@types/jest": "^24.9.1",
+    "@types/lodash": "^4.14.150",
+    "@types/webpack-env": "^1.15.2",
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "@typescript-eslint/parser": "^4.31.2",
+    "ansi-colors": "^4.1.1",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "child-process-promise": "^2.2.1",
+    "cli-spinner": "^0.2.10",
+    "copy": "^0.3.2",
+    "del": "^5.1.0",
+    "enquirer": "^2.3.6",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-typescript": "^14.0.0",
+    "eslint-plugin-import": "^2.20.2",
+    "fs-extra": "^9.0.1",
+    "jest": "^26.6.3",
+    "lint-staged": "^10.2.2",
+    "mini-css-extract-plugin": "^0.9.0",
+    "module": "^1.2.5",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.2",
+    "semver": "^7.3.2",
+    "stylelint": "^13.6.1",
+    "stylelint-codeframe-formatter": "^1.0.4",
+    "stylelint-config-standard": "^18.2.0",
+    "ts-loader": "^7.0.5",
+    "tsc-watch": "^4.2.9",
+    "typescript": "^3.9.9",
+    "yorkie": "^2.0.0"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "npm run lint",
+      "git add"
+    ],
+    "*.{htm,html,css,sss,less,scss}": [
+      "npm run lint:style",
+      "git add"
+    ]
+  },
+  "vuePlugins": {
+    "service": []
+  }
+}

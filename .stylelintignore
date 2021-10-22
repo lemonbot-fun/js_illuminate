@@ -1,0 +1,4 @@
+# .gitignore syntax (uses node-ignore behind the scenes)
+
+public/lib/trading_view/
+src/assets/iconfont/
