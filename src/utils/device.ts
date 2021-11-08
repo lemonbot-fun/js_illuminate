@@ -6,7 +6,7 @@ export const DEVICE_TYPE = {
   MOBILE: 'mobile',
 };
 
-export function deviceEnquire(callback: Function) {
+export function deviceEnquire(callback?: (deviceType: string) => void) {
   const matchDesktop = {
     match: () => {
       callback && callback(DEVICE_TYPE.DESKTOP);
@@ -26,10 +26,7 @@ export function deviceEnquire(callback: Function) {
   };
 
   // screen and (max-width: 1087.99px)
-  enquireJs
-    .register('screen and (max-width: 576px)', matchMobile)
-    .register('screen and (min-width: 576px) and (max-width: 1199px)', matchLablet)
-    .register('screen and (min-width: 1200px)', matchDesktop);
+  enquireJs.register('screen and (max-width: 576px)', matchMobile).register('screen and (min-width: 576px) and (max-width: 1199px)', matchLablet).register('screen and (min-width: 1200px)', matchDesktop);
 }
 
 const variables: { [key: string]: string } = {

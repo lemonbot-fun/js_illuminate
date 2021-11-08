@@ -62,7 +62,6 @@ export function between(num: number, min: number, max: number) {
   return min <= num && num <= max;
 }
 
-
 /**
  * 格式化人民币价格
  *
@@ -88,6 +87,7 @@ export function formatCny(val: string, isForced = true) {
  * @param maximumFractionDigits
  */
 export function formatWithIntl(number: number, minimumFractionDigits = 2, maximumFractionDigits = 2) {
+  // eslint-disable-next-line no-param-reassign
   maximumFractionDigits = Math.max(minimumFractionDigits, maximumFractionDigits);
 
   return new Intl.NumberFormat('en-us', {

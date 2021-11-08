@@ -36,16 +36,14 @@ export function emptyThen<T>(val: any, def: T): T {
  */
 export function noEmptyProp<T extends Record<string | number | symbol, any>>(origin: T): Partial<T> {
   const data: Partial<T> = {};
-  Object.entries(origin)
-    .forEach(([key, val]) => {
-      // eslint-disable-next-line no-void
-      if (isEmpty(val)) return;
-      data[key as keyof T] = val;
-    });
+  Object.entries(origin).forEach(([key, val]) => {
+    // eslint-disable-next-line no-void
+    if (isEmpty(val)) return;
+    data[key as keyof T] = val;
+  });
 
   return data;
 }
-
 
 /**
  * 取出对象中不包含特定 key 的元素组成新对象
@@ -84,4 +82,3 @@ export function staticClone<T>(obj: T): T {
 export function isThenAble(obj: any) {
   return is.object(obj) && is.function(obj.then);
 }
-

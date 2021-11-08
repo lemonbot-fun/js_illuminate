@@ -1,4 +1,5 @@
-
+/* eslint-disable prettier/prettier */
+/* prettier-ignore */
 export function timeFix() {
   const time = new Date();
   const hour = time.getHours();
@@ -10,4 +11,5 @@ export function timeFix() {
         ? '中午好'
         : hour < 20
           ? '下午好' : '晚上好';
+
 }

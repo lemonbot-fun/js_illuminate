@@ -10,6 +10,7 @@ export const apiRoutes: {
  * @returns {*}
  */
 export function route(routeName: string, params: { [key: string]: string }) {
+  // eslint-disable-next-line no-param-reassign
   params = typeof params !== 'object' ? {} : params;
 
   if (apiRoutes[routeName] === undefined) {

@@ -1,5 +1,5 @@
-
 const getConstructor = (input: any) => (input !== null && typeof input !== 'undefined' ? input.constructor : null);
+// eslint-disable-next-line @typescript-eslint/ban-types
 const instanceOf = (input: any, constructor: Function) => Boolean(input && constructor && input instanceof constructor);
 const isNullOrUndefined = (input: any) => input === null || typeof input === 'undefined';
 const isObject = (input: any) => getConstructor(input) === Object;
@@ -18,9 +18,7 @@ const isCue = (input: any) => instanceOf(input, TextTrackCue) || instanceOf(inpu
 const isTrack = (input: any) => instanceOf(input, TextTrack) || (!isNullOrUndefined(input) && isString(input.kind));
 const isPromise = (input: any) => instanceOf(input, Promise);
 
-const isEmpty = (input: any) => isNullOrUndefined(input)
-  || ((isString(input) || isArray(input) || isNodeList(input)) && !input.length)
-  || (isObject(input) && !Object.keys(input).length);
+const isEmpty = (input: any) => isNullOrUndefined(input) || ((isString(input) || isArray(input) || isNodeList(input)) && !input.length) || (isObject(input) && !Object.keys(input).length);
 
 const isUrl = (input: any) => {
   // Accept a URL object

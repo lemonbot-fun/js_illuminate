@@ -7,11 +7,11 @@ const EVENT_TICKER_MESSAGE = 'EVENT_TICKER_MESSAGE';
 export type TickerActions = 'subscribe' | 'unsubscribe';
 
 export type AR = {
-  channel: string,
-  [key: string]: any,
+  channel: string;
+  [key: string]: any;
 };
 
-type TickerPayload = { op: TickerActions, ar: [AR] };
+type TickerPayload = { op: TickerActions; ar: [AR] };
 
 export const channelsList = {
   CHANNEL_ORDER: 'order',
@@ -26,10 +26,10 @@ let getPingId = () => 0;
 let pingDelay = 1000;
 let socket: WebSocket | null;
 let reconnectId!: number;
-let reconnectDelay: number = 5000;
+let reconnectDelay = 5000;
 let resetReconnectDelayId!: number;
 let loopId!: number;
-let latestConnectAt: number = 0;
+let latestConnectAt = 0;
 const workerQueue: any[] = [];
 
 // 链接 Socket
@@ -37,7 +37,7 @@ function connect() {
   const onClose = () => {
     window.clearInterval(resetReconnectDelayId);
     // 快速断链的情况下 逐次增加重连等待时间
-    const now = (new Date()).getTime();
+    const now = new Date().getTime();
     if (now - latestConnectAt < 20000) {
       reconnectDelay += 5000;
     }
@@ -54,7 +54,7 @@ function connect() {
 
   try {
     stopReConnect();
-    latestConnectAt = (new Date()).getTime();
+    latestConnectAt = new Date().getTime();
     socket = new WebSocket('url');
 
     // Listen for messages
@@ -91,7 +91,7 @@ function connect() {
 // 开始任务处理循环监听
 function startLoop() {
   loopId = window.setInterval(() => {
-    if (socket && socket!.readyState === WebSocket.OPEN) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
       const worker = workerQueue.shift();
       worker && worker();
     }
@@ -133,14 +133,20 @@ function stopReConnect() {
 // 为了测试快速断链的情况 ping 的延迟逐次递增，
 function startPing() {
   clearTimeout(getPingId());
-  const pindId = window.setTimeout(() => {
-    workerQueue.push(() => {
-      socket!.send('ping');
-      startPing();
-      pingDelay += 1000;
-    });
-  }, pingDelay > 10000 ? 10000 : pingDelay);
-  getPingId = ((id: number) => () => id)(pindId);
+  const pindId = window.setTimeout(
+    () => {
+      workerQueue.push(() => {
+        socket?.send('ping');
+        startPing();
+        pingDelay += 1000;
+      });
+    },
+    pingDelay > 10000 ? 10000 : pingDelay,
+  );
+  getPingId = (
+    (id: number) => () =>
+      id
+  )(pindId);
 }
 
 // 停止定时 ping
@@ -158,13 +164,10 @@ function makePayload(action: TickerActions, ar: AR): TickerPayload {
   return { op: action, ar: [ar] };
 }
 
-let subscribedAr: { ar: AR, refNo: number }[] = [];
+let subscribedAr: { ar: AR; refNo: number }[] = [];
 
 export class Channel {
-  constructor(
-    public channel: string,
-    public params: any,
-  ) {
+  constructor(public channel: string, public params: any) {
     // Not empty
   }
 
@@ -182,9 +185,9 @@ export class Channel {
 
 // 重连后重新订阅所有内容
 async function reSubscribeAll() {
-  subscribedAr.forEach(item => {
+  subscribedAr.forEach((item) => {
     workerQueue.push(() => {
-      socket!.send(JSON.stringify(makePayload('subscribe', item.ar)));
+      socket?.send(JSON.stringify(makePayload('subscribe', item.ar)));
     });
   });
 }
@@ -195,7 +198,7 @@ export function subscribe(channel: string, params?: any) {
 
   const cn = new Channel(channel, params);
   let found = false;
-  subscribedAr.forEach(item => {
+  subscribedAr.forEach((item) => {
     if (JSON.stringify(item.ar) === JSON.stringify(cn.ar)) {
       found = true;
       item.refNo++;
@@ -204,7 +207,7 @@ export function subscribe(channel: string, params?: any) {
 
   if (!found) {
     const worker = ((subPayload: TickerPayload) => () => {
-      socket!.send(JSON.stringify(subPayload));
+      socket?.send(JSON.stringify(subPayload));
     })(makePayload('subscribe', cn.ar));
 
     workerQueue.push(worker);
@@ -215,18 +218,18 @@ export function subscribe(channel: string, params?: any) {
 }
 
 function unSubscribe(ar: AR) {
-  subscribedAr.forEach(item => {
+  subscribedAr.forEach((item) => {
     if (JSON.stringify(item.ar) !== JSON.stringify(ar)) return;
 
     item.refNo--;
 
     if (item.refNo === 0) {
       const worker = ((subPayload: TickerPayload) => () => {
-        socket!.send(JSON.stringify(subPayload));
+        socket?.send(JSON.stringify(subPayload));
       })(makePayload('unsubscribe', ar));
       workerQueue.push(worker);
     }
   });
 
-  subscribedAr = subscribedAr.filter(item => (item.refNo > 0));
+  subscribedAr = subscribedAr.filter((item) => item.refNo > 0);
 }

@@ -3,10 +3,7 @@
 import { MemoryStorage, WebStorage } from './provider';
 
 // eslint-disable-next-line
-const _global: {
-  localStorage?: Storage,
-  sessionStorage?: Storage,
-} = (typeof window !== 'undefined' ? window : {});
+const _global: { localStorage?: Storage; sessionStorage?: Storage } = typeof window !== 'undefined' ? window : {};
 
 export type StorageListener = (newValue: any, oldValue: any, url: string) => void;
 
@@ -16,11 +13,7 @@ export type StorageOptions = {
   storage?: 'local' | 'session' | 'memory';
 };
 
-const defaultStore = 'localStorage' in _global
-  ? _global.localStorage!
-  : 'sessionStorage' in _global
-    ? _global.sessionStorage!
-    : MemoryStorage;
+const defaultStore = 'localStorage' in _global ? _global.localStorage! : 'sessionStorage' in _global ? _global.sessionStorage! : MemoryStorage;
 
 const ls = new WebStorage(defaultStore);
 
@@ -39,17 +32,13 @@ export function getStorage(userOptions: StorageOptions = {}): WebStorage {
 
   let store = null;
 
-  switch (options.storage) { // eslint-disable-line
+  switch (options.storage) {
     case 'local':
-      store = 'localStorage' in _global
-        ? _global.localStorage
-        : null;
+      store = 'localStorage' in _global ? _global.localStorage : null;
       break;
 
     case 'session':
-      store = 'sessionStorage' in _global
-        ? _global.sessionStorage
-        : null;
+      store = 'sessionStorage' in _global ? _global.sessionStorage : null;
       break;
     case 'memory':
       store = MemoryStorage;
@@ -64,9 +53,7 @@ export function getStorage(userOptions: StorageOptions = {}): WebStorage {
 
   const ws = new WebStorage(store);
 
-  ws.setOptions(Object.assign(ws.options, {
-    namespace: '',
-  }, options || {}));
+  ws.setOptions(Object.assign(ws.options, { namespace: '' }, options || {}));
   return ws;
 }
 

@@ -2,7 +2,7 @@ export function setDocumentTitle(title: string) {
   document.title = title;
   const ua = navigator.userAgent;
   // eslint-disable-next-line
-  const regex = /\bMicroMessenger\/([\d.]+)/
+  const regex = /\bMicroMessenger\/([\d.]+)/;
   if (regex.test(ua) && /ip(hone|od|ad)/i.test(ua)) {
     const frame = document.createElement('iframe');
     frame.src = '/favicon.ico';
@@ -83,10 +83,11 @@ export function triggerWindowResizeEvent() {
   window.dispatchEvent(event);
 }
 
-export function handleScrollHeader(callback: Function) {
+export function handleScrollHeader(callback: (direction: string) => any) {
   let timer = 0;
 
   let beforeScrollTop = window.pageYOffset;
+  // eslint-disable-next-line no-param-reassign
   callback = callback || (() => null);
   window.addEventListener(
     'scroll',
@@ -121,7 +122,7 @@ export function parent(el: HTMLElement) {
  * @param el
  */
 export function siblings(el: HTMLElement) {
-  return Array.prototype.filter.call(el.parentNode!.children, child => child !== el);
+  return Array.prototype.filter.call(el.parentNode!.children, (child) => child !== el);
 }
 
 /**
@@ -140,4 +141,3 @@ export function parseHTML(str: string) {
   context.body.innerHTML = str;
   return context.body.children;
 }
-

@@ -1,4 +1,3 @@
-
 export function isIE() {
   const bw = window.navigator.userAgent;
   const compare = (s: string) => bw.indexOf(s) >= 0;
@@ -12,7 +11,7 @@ export function isIE() {
  */
 export function sureOffline() {
   // eslint-disable-next-line no-restricted-syntax
-  return ('onLine' in navigator) && !navigator.onLine;
+  return 'onLine' in navigator && !navigator.onLine;
 }
 
 export function openInNewWindow(url: string) {

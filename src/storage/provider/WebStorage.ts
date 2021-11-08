@@ -36,7 +36,7 @@ export class WebStorage {
     });
 
     if (typeof window !== 'undefined') {
-      this.options.events?.forEach(name => {
+      this.options.events?.forEach((name) => {
         window.addEventListener(name, WebStorageEvent.emit, false);
       });
     }
@@ -139,7 +139,7 @@ export class WebStorage {
       removedKeys.push(key);
     }
 
-    removedKeys.forEach(item => {
+    removedKeys.forEach((item) => {
       this.storage.removeItem(item);
     });
   }

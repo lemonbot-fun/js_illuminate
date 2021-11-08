@@ -7,8 +7,8 @@ import { isEmpty } from './object';
  * @param index
  * @param args
  */
-export function insert(origin: any[], index: number, ...args: any[]) {
-  origin.splice(index, 0, ...args);
+export function insert<T = any, E extends T = any>(origin: T[], index: number, ...args: E[]) {
+  origin.splice(index, 0, ...(args as T[]));
   return origin;
 }
 
@@ -46,11 +46,13 @@ export function treeDeep(items: Record<string, any>[], childIndex = 'children', 
  */
 export function deepReduce<T>(arr: any[], childrenKey: string, callback: (prev: T, curr: any, index: number, arr: any[]) => T, accumulator: T): T {
   return arr.reduce((prev, curr, index) => {
+    /* eslint-disable no-param-reassign */
     prev = callback(prev, curr, index, arr);
     if (curr[childrenKey]) {
       prev = deepReduce(curr[childrenKey], childrenKey, callback, prev);
     }
     return prev;
+    /* eslint-enable no-param-reassign */
   }, accumulator);
 }
 
@@ -60,15 +62,15 @@ export function deepReduce<T>(arr: any[], childrenKey: string, callback: (prev: 
  * @param tree
  * @param map
  * @param childrenKey
+ * @param prefix
  */
 export function settleTree(tree: any[], map: { [form: string]: string | ((item: any, index: number, prefix: any[]) => any) }, childrenKey = 'children', prefix: any[] = []) {
   tree.forEach((item, index) => {
-    Object.entries(map)
-      .forEach(([to, from]) => {
-        if (typeof from === 'string' && isEmpty(item[from])) return;
+    Object.entries(map).forEach(([to, from]) => {
+      if (typeof from === 'string' && isEmpty(item[from])) return;
 
-        item[to] = typeof from === 'function' ? from(item, index, prefix) : item[from];
-      });
+      item[to] = typeof from === 'function' ? from(item, index, prefix) : item[from];
+    });
 
     if (item[childrenKey]) {
       item.children = settleTree(item[childrenKey], map, childrenKey, [...prefix, item]);
@@ -116,7 +118,7 @@ export function buildTree<T extends Record<string, any> = any>(arr: Array<T>, id
         } as TreeNode<T>;
       }
 
-      tmpMap[pid].children!.push(treeItem);
+      tmpMap[pid].children?.push(treeItem);
     }
   }
 
