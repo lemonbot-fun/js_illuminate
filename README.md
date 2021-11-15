@@ -1,36 +1,28 @@
-# NL Illuminate
+# 🍋 @Lemonbot.fun / Illuminate
 
-Lemonbot 前端基础库。
+Lemonbot JS 小工具库。
 
 ## Project setup
 ```
-npm install
+yarn install
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
-```
-
-### Compiles and publish library to repository
-```
-npm run pub
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Run your end-to-end tests
-```
-npm run test:e2e
+yarn run build
 ```
 
 ### Lints and fixes files
 ```
-npm run lint
+yarn run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Run your unit tests
+```
+yarn run test
+```
+
+### Compiles and publish library to repository
+```
+yarn run pub
+```

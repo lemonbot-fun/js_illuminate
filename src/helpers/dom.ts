@@ -16,7 +16,7 @@ export function setDocumentTitle(title: string) {
   }
 }
 
-export const domTitle = 'NL SAAS';
+export const domTitle = 'Title';
 
 /**
  * 将图片渲染到 画布
