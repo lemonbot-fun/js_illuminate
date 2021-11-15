@@ -14,9 +14,9 @@
     "test:coverage": "jest --collect-coverage",
     "pub": "npm run lint && npm run lint:style && node build/publish.js"
   },
-  "main": "lib/index.js",
-  "module": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist",
     "src"
