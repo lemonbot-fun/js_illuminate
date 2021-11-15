@@ -1,6 +1,6 @@
 {
   "name": "@lemonbot.fun/illuminate",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "scripts": {
     "dev": "tsc-watch",
     "build": "node build/clean.js && npm run build:lib && npm run build:types",
