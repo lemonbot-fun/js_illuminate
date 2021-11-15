@@ -14,9 +14,9 @@
     "test:coverage": "jest --collect-coverage",
     "pub": "npm run lint && npm run lint:style && node build/publish.js"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "index.js",
+  "module": "index.js",
+  "types": "index.d.ts",
   "dependencies": {
     "dayjs": "^1.8.26",
     "enquire.js": "^2.1.6",
@@ -26,6 +26,7 @@
   "devDependencies": {
     "@babel/cli": "^7.15.7",
     "@babel/plugin-transform-typescript": "^7.15.8",
+    "@babel/preset-env": "^7.16.0",
     "@babel/preset-typescript": "^7.15.0",
     "@lemonbot.fun/eslint-config-base": "^0.1.9",
     "@types/enquire.js": "^2.1.2",
