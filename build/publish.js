@@ -1,4 +1,3 @@
-
 const { existsSync } = require('fs');
 const { execSync } = require('child_process');
 const { exec, spawn } = require('child-process-promise');
@@ -24,26 +23,26 @@ if (process.platform === 'win32') {
 async function getReleaseVersion() {
   const dir = path.resolve(process.cwd(), 'package.json');
   if (!existsSync(dir)) {
-    throw new Error(dir + 'doesn\'t exist');
+    throw new Error(dir + "doesn't exist");
   }
 
-  let version = require(dir).version
+  let version = require(dir).version;
 
   if (!version) {
     throw new Error('no version in package.json');
   }
 
   const releaseType = ['patch', 'minor', 'major', 'prepatch', 'preminor', 'premajor', 'prerelease'];
-  const choices = releaseType.map(item => `${item}: ${semver.inc(version, item)}`);
+  const choices = releaseType.map((item) => `${item}: ${semver.inc(version, item)}`);
 
   ({ version } = await prompt({
     name: 'version',
     type: 'select',
     message: 'Select release version',
-    choices: choices
+    choices: choices,
   }));
 
-  return version.split(':')[1].trim()
+  return version.split(':')[1].trim();
 }
 
 // 如果发生 任意错误 既退出整个脚本
@@ -52,73 +51,92 @@ async function getReleaseVersion() {
     execSync('git checkout dev');
 
     // = ---------------------------- = progress unit test = ---------------------------- =
-    console.info(':: =--= Testing :: =--=');
+    let spinner = new Spinner(`${ac.green('✔')} Testing ... %s`);
+    spinner.setSpinnerString('⣾⣽⣻⢿⡿⣟⣯⣷');
+    spinner.start();
+
     await exec(`${npmCmd} run test`);
 
+    console.log(`\nTest All Complete ${ac.green('✔')}`);
+
     // = ---------------------------- = check work tree = ---------------------------- =
-    console.info(':: =--= Checking Work Tree :: =--=');
+    spinner = new Spinner(`${ac.green('✔')} Checking Work Tree ... %s`);
+    spinner.setSpinnerString('⣾⣽⣻⢿⡿⣟⣯⣷');
+    spinner.start();
+
     let res;
     res = await exec('git status --porcelain');
 
     if (res.stdout.toString().trim().length) {
-      console.error('Unclean working tree. Commit or stash changes first.');
+      console.error('\nError: Unclean working tree. Commit or stash changes first.');
       process.exit(1);
     }
 
+    spinner.stop();
+    console.log(`\nWork Clean ${ac.green('✔')}`);
+
     // = ---------------------------- = check remote status = ---------------------------- =
-    console.info(':: =--= Checking Status :: =--=');
+    spinner = new Spinner(`${ac.green('✔')} Checking Remote Status ... %s`);
+    spinner.setSpinnerString('⣾⣽⣻⢿⡿⣟⣯⣷');
+    spinner.start();
+
     try {
       await exec(`git fetch --quiet ${pipeNull}`);
     } catch (e) {
-      console.error('There was a problem fetching your branch. Run `git fetch` to see more...')
+      console.error('\nError: There was a problem fetching your branch. Run `git fetch` to see more...');
       process.exit();
     }
 
+    spinner.stop();
+    console.log(`\nLocal Branch Is Up To Data. ${ac.green('✔')}`);
+
     // = ---------------------------- = check remote history = ---------------------------- =
-    console.info(':: =--= Checking History :: =--=');
+    spinner = new Spinner(`${ac.green('✔')} Checking Remote History ... %s`);
+    spinner.setSpinnerString('⣾⣽⣻⢿⡿⣟⣯⣷');
+    spinner.start();
+
     try {
       res = await exec(`git rev-list --count --left-only @{upstream} ...HEAD`);
       if (res.stdout.trim() !== '0') {
-        console.error('Remote history differ. Please pull changes.');
+        console.error('\nError: Remote history differ. Please pull changes.');
         process.exit();
       }
     } catch (e) {
       if (e.stderr.toString().indexOf('no upstream') !== -1) {
-        console.error(e.stderr.toString());
+        console.error(`\nError: ${e.stderr.toString()}`);
         process.exit();
       } else {
         throw e;
       }
     }
 
+    spinner.stop();
+    console.log(`\nRemote Branch Is Up To Data. ${ac.green('✔')}`);
+
     // = ---------------------------- = release & publish = ---------------------------- =
     const version = await getReleaseVersion();
 
-    console.info(':: =--= Releasing :: =--=');
     // confirm
     const prompt = new Confirm({ name: 'isSure', message: `Releasing ${version} - are you sure?` });
-    let answer = await prompt.run()
+    let answer = await prompt.run();
     !answer && process.exit();
 
-    const spinner = new Spinner(`${ac.green('√')} Releasing ${version} ... %s`);
+    spinner = new Spinner(`${ac.green('√')} Releasing ${version} ... %s`);
     spinner.setSpinnerString('⣾⣽⣻⢿⡿⣟⣯⣷');
     spinner.start();
 
     // build
-    console.info(':: =--= Building :: =--=');
     await exec(`${npmCmd} run build ${pipeNull}`);
 
     // set version
     await exec(`${npmCmd} version ${version} --message "[release] ${version}"`);
 
     // publish
-    console.info(':: =--= Publishing :: =--=');
     await copy(path.resolve(__dirname, '../package.json'), distDir);
     process.chdir(distDir);
-    await exec(`${npmCmd} publish --access public`);
+    await exec(`${npmCmd} publish --access public --registry=https://registry.npmjs.org/`);
 
     spinner.stop();
-
     console.log(`\n${ac.red('♥')} Release complete!`);
   } catch (e) {
     if (e.stderr) {
@@ -130,4 +148,4 @@ async function getReleaseVersion() {
     }
     process.exit(1);
   }
-})()
+})();
