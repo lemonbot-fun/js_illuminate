@@ -122,7 +122,7 @@ async function getReleaseVersion() {
     let answer = await prompt.run();
     !answer && process.exit();
 
-    spinner = new Spinner(`${ac.green('√')} Releasing ${version} ... %s`);
+    spinner = new Spinner(`${ac.green('✔')} Releasing ${version} ... %s`);
     spinner.setSpinnerString('⣾⣽⣻⢿⡿⣟⣯⣷');
     spinner.start();
 
