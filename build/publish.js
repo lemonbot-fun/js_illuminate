@@ -57,6 +57,7 @@ async function getReleaseVersion() {
 
     await exec(`${npmCmd} run test`);
 
+    spinner.stop();
     console.log(`\nTest All Complete ${ac.green('✔')}`);
 
     // = ---------------------------- = check work tree = ---------------------------- =
