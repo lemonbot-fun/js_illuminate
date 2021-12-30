@@ -80,7 +80,7 @@ export function settleTree(tree: any[], map: { [form: string]: string | ((item: 
   return tree;
 }
 
-export type TreeNode<T> = T & { children?: TreeNode<T>[] };
+export type TreeNode<T = any> = T & { children?: TreeNode<T>[] };
 
 /**
  * 基于数组创建树形结构
@@ -90,7 +90,7 @@ export type TreeNode<T> = T & { children?: TreeNode<T>[] };
  * @param pidIndex
  */
 export function buildTree<T extends Record<string, any> = any>(arr: Array<T>, idIndex = 'id', pidIndex = 'pid'): Array<TreeNode<T>> {
-  const result = []; // 存放结果集
+  let result: TreeNode<T>[] = []; // 存放结果集
   const tmpMap: Record<string, TreeNode<T>> = {}; //
   for (const item of arr) {
     const id = item[idIndex];
@@ -109,18 +109,21 @@ export function buildTree<T extends Record<string, any> = any>(arr: Array<T>, id
 
     const treeItem = tmpMap[id];
 
-    if (pid === 0) {
-      result.push(treeItem);
-    } else {
-      if (!tmpMap[pid]) {
-        tmpMap[pid] = {
-          children: [] as TreeNode<T>[],
-        } as TreeNode<T>;
-      }
-
-      tmpMap[pid].children?.push(treeItem);
+    if (!tmpMap[pid]) {
+      tmpMap[pid] = {
+        children: [] as TreeNode<T>[],
+      } as TreeNode<T>;
     }
+
+    tmpMap[pid].children?.push(treeItem);
   }
+
+  Object.values(tmpMap).forEach((item) => {
+    const keys = Object.keys(item);
+    if (keys.length === 1 && keys[0] === 'children' && item.children && item.children.length) {
+      result = result.concat(item.children);
+    }
+  });
 
   return result;
 }

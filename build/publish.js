@@ -118,7 +118,7 @@ async function getReleaseVersion() {
     const version = await getReleaseVersion();
 
     // confirm
-    const prompt = new Confirm({ name: 'isSure', message: `Releasing ${version} - are you sure?` });
+    const prompt = new Confirm({ name: 'isSure', message: `Release ${version} - are you sure?` });
     let answer = await prompt.run();
     !answer && process.exit();
 
